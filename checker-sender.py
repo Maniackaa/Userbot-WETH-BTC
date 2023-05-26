@@ -37,8 +37,8 @@ async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
         result = await session.execute(select(Token).filter(
             Token.is_honeypot == '').limit(1))
         token: Token = result.scalars().first()
-        logger.debug('token')
         if token:
+            logger.debug(f'Проверяем token {token}')
             token_data = datetime.datetime.fromisoformat(token.date)
             now_time = datetime.datetime.now()
             now_time_timdelta = datetime.timedelta(hours=now_time.hour,

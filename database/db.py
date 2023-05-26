@@ -54,7 +54,19 @@ class Liquidation(Base):
         return f'{self.id}. {self.addet_time}: {self.text}'
 
 
-async def init_models(engine):
+class BotSettings(Base):
+    __tablename__ = 'bot_settings'
+    id: Mapped[int] = mapped_column(primary_key=True,
+                                    autoincrement=True,
+                                    comment='Первичный ключ')
+    name: Mapped[str] = mapped_column(String(50))
+    value: Mapped[str] = mapped_column(String(50), nullable=True, default='')
+    description: Mapped[str] = mapped_column(String(255),
+                                             nullable=True,
+                                             default='')
+
+
+async def init_models():
     async with engine.begin() as conn:
         # await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)

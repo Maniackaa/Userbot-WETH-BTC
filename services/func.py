@@ -1,3 +1,4 @@
+import datetime
 import logging.config
 
 import requests
@@ -10,6 +11,7 @@ from selenium.webdriver.support import expected_conditions
 import re
 
 from config_data.config import config, LOGGING_CONFIG
+from database.db import Liquidation
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger('checker-sender')
@@ -151,3 +153,27 @@ def send_message_tg(message: str, chat_id: str):
            f'chat_id={chat_id}&'
            f'text={message}')
     requests.get(url)
+
+
+def find_start_period(
+        target_day: int,
+        current_day: datetime = datetime.datetime.now()) -> datetime:
+    """Возвращает datetime прошлонедельного заданного дня недели"""
+    delta_to_day = target_day - current_day.weekday()
+    if delta_to_day > 0:
+        res_delta_day = 7 - delta_to_day
+    else:
+        res_delta_day = delta_to_day
+    result_day = current_day + datetime.timedelta(days=res_delta_day)
+    result_day = result_day.replace(hour=0, minute=0, second=0, microsecond=0)
+    return result_day
+
+
+def format_last_report(liqidations: list[Liquidation]):
+    text = f'Последние 10 ликвидаций\n'
+    for liqidation in liqidations:
+        text += (f'{liqidation.id}. {liqidation.addet_time}\n{liqidation.source}\n'
+                 f'{liqidation.text}\n'
+                 )
+        text += '\n'
+    return text

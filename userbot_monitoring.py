@@ -78,7 +78,7 @@ async def bitmex(client: Client, message: Message):
     try:
         text = message.text
         transaction, volume, price = response_bitmex_liquidation(text)
-        await add_liquidation('Binance Futures Liquidations',
+        await add_liquidation('BitMEX Sniper',
                                   text, transaction, volume, price)
     except Exception as err:
         err_log.warning(f'Ошибка при обработке сообщения:\n {message}')
@@ -100,14 +100,15 @@ async def binance_futures_liquidations(client: Client, message: Message):
     :param message:
     :return:
     """
-    logger.debug(f'Binance Futures Liquidations: {message.text}')
+
     try:
         text = message.text
         source = message.chat.title
+        logger.debug(f'{source}: {message.text}')
         coin, transaction, volume, price = response_liquidation(text)
         logger.debug(f'Распознано из {text}:\n'
                      f'{(coin, transaction, volume, price)}')
-        if coin == 'BTC':
+        if 'BTC' in coin.upper():
             await add_liquidation(source,
                                   text, transaction, volume, price)
         else:
@@ -148,7 +149,6 @@ async def send_message(client: Client, message: Message):
 @client.on_message()
 async def last_filter(client: Client, message: Message):
     print('Мимо')
-    # await add_token_to_base(message.text, '2', 3)
 
 try:
     client.run()
