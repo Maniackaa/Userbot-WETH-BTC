@@ -39,10 +39,6 @@ except Exception as err:
 delay = 1/20
 
 client = Client(name="my_account", api_hash=api_hash, api_id=api_id)
-bot = Client(name='bot',
-             api_id=api_id,
-             api_hash=api_hash,
-             bot_token=bot_token)
 
 
 print(f'Стартовые настройки:\n'
@@ -155,12 +151,9 @@ async def last_filter(client: Client, message: Message):
     # await add_token_to_base(message.text, '2', 3)
 
 try:
-    # bot.start()
-    # bot.send_message(send_id, 'Monitoring start')
     client.run()
 
 except Exception as err:
-    # bot.stop()
     print(err)
     input('Ошибка. Нажмите Enter')
     raise err

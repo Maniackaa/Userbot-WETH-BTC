@@ -81,10 +81,11 @@ def format_message(token):
     return msg
 
 
-def send_message_tg(message: str, chat_id: str):
+def send_message_tg(message: str, chat_id: str,
+                    sended_bot_token=config.tg_bot.token):
     """Отправка сообщения через чат-бот телеграмма"""
     url = (f'https://api.telegram.org/'
-           f'bot{bot_token}/'
+           f'bot{sended_bot_token}/'
            f'sendMessage?'
            f'chat_id={chat_id}&'
            f'text={message}')
@@ -110,7 +111,7 @@ async def check_send(async_session: async_sessionmaker[AsyncSession]):
             if is_send:
                 message = format_message(token)
                 logger.info('Отправляем сообщение')
-                send_message_tg(message, send_id)
+                send_message_tg(message, send_id, config.tg_bot.UNISWAP_TOKEN)
         await session.commit()
 
 
