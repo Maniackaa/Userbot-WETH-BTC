@@ -59,7 +59,7 @@ def get_rug_check(token):
         result_xpatch = '//div[contains(text(), "Checking for Honeypot")]'
         try:
             logger.debug('Ждем Checking for Honeypot')
-            browser.save_screenshot('honey.jpg')
+            # browser.save_screenshot('honey.jpg')
             WebDriverWait(browser, 20).until(
                 expected_conditions.visibility_of_element_located(
                     (By.XPATH, result_xpatch)))
@@ -71,7 +71,7 @@ def get_rug_check(token):
             try:
                 result = browser.find_element(By.XPATH, result_xpatch).text
             except:
-                browser.save_screenshot('screen_err.jpg')
+                browser.save_screenshot('screen_err.png')
 
         logger.debug(result)
         return result
