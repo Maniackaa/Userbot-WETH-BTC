@@ -1,0 +1,15 @@
+[Unit]
+Description=bot-btc-reporter
+After=network.target
+
+[Service]
+EnvironmentFile=
+ExecStart=/home/Userbot-WETH-BTC/venv/bin/python bot-btc-reporter.py
+ExecReload=/home/Userbot-WETH-BTC/venv/bin/python bot-btc-reporter.py
+WorkingDirectory=/home/Userbot-WETH-BTC/
+KillMode=process
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

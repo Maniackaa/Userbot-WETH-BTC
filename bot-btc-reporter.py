@@ -50,8 +50,11 @@ async def main():
     dp.include_router(echo.router)
     asyncio.create_task(timer(bot))
     await bot.delete_webhook(drop_pending_updates=True)
-    await bot.send_message(config.tg_bot.admin_ids[0],
+    try:
+        await bot.send_message(config.tg_bot.admin_ids[0],
                            f'Бот запущен.')
+    except:
+        err_log.critical(f'Не могу отравить сообщение {config.tg_bot.admin_ids[0]}')
     await dp.start_polling(bot)
 
 

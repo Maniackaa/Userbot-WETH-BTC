@@ -43,7 +43,9 @@ async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
         if token:
             logger.debug(f'Проверяем token {token}')
             token_data = datetime.datetime.fromisoformat(token.date)
+            logger.debug(f'token_data {token_data}')
             now_time = datetime.datetime.utcnow()
+            logger.debug(f'now_time {now_time}')
             now_time_timdelta = datetime.timedelta(hours=now_time.hour,
                                                    minutes=now_time.minute,
                                                    seconds=now_time.second)
@@ -52,6 +54,8 @@ async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
                                                  seconds=token_data.second)
             delta = (now_time_timdelta - token_timedelta).seconds
             logger.debug(f'Дельта в секундах {delta}')
+            logger.debug(f'{delta}/60 > config.logic.HONEYPOT_DELAY: '
+                         f'{delta / 60 > config.logic.HONEYPOT_DELAY}')
             if delta / 60 > config.logic.HONEYPOT_DELAY:
                 honey = get_honeypot_check(token.token)
                 logger.debug('honey: {honey}')
