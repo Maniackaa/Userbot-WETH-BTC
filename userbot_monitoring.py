@@ -155,12 +155,12 @@ async def last_filter(client: Client, message: Message):
     # await add_token_to_base(message.text, '2', 3)
 
 try:
-    bot.start()
-    bot.send_message(send_id, 'Monitoring start')
+    # bot.start()
+    # bot.send_message(send_id, 'Monitoring start')
     client.run()
 
 except Exception as err:
-    bot.stop()
+    # bot.stop()
     print(err)
     input('Ошибка. Нажмите Enter')
     raise err
