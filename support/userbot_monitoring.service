@@ -1,0 +1,15 @@
+[Unit]
+Description=Uniswap Bot
+After=network.target
+
+[Service]
+EnvironmentFile=
+ExecStart=/bot/venv/bin/python bot_monitoring_uniswapinstant.py
+ExecReload=/bot/venv/bin/python bot_monitoring_uniswapinstant.py
+WorkingDirectory=/bot/
+KillMode=process
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

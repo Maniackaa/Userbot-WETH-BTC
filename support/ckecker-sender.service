@@ -1,0 +1,15 @@
+[Unit]
+Description=checker-sender Bot
+After=network.target
+
+[Service]
+EnvironmentFile=
+ExecStart=/bot/venv/bin/python checker-sender.py
+ExecReload=/bot/venv/bin/python checker-sender.py
+WorkingDirectory=/bot/
+KillMode=process
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
