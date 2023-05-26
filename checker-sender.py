@@ -33,6 +33,9 @@ async def check_empty_score(async_session: async_sessionmaker[AsyncSession]):
 
 
 async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
+    """
+    Достает первый пустой is_honeypot
+    """
     async with async_session() as session:
         result = await session.execute(select(Token).filter(
             Token.is_honeypot == '').limit(1))
@@ -48,8 +51,8 @@ async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
                                                  minutes=token_data.minute,
                                                  seconds=token_data.second)
             delta = (now_time_timdelta - token_timedelta).seconds
-            logger.debug(f'Дельта {delta}')
-            if delta > config.logic.HONEYPOT_DELAY:
+            logger.debug(f'Дельта в секундах {delta}')
+            if delta / 60 > config.logic.HONEYPOT_DELAY:
                 honey = get_honeypot_check(token.token)
                 logger.debug('honey: {honey}')
                 token.is_honeypot = honey
