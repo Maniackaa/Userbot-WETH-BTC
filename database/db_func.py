@@ -11,6 +11,7 @@ from services.func import find_start_period
 
 logging.config.dictConfig(LOGGING_CONFIG)
 err_log = logging.getLogger('errors_logger')
+logger = logging.getLogger('bot-btc-reporter')
 
 
 async def add_liquidation(source, text, transaction, volume, price) -> None:
@@ -79,11 +80,11 @@ async def lat_week_short_lonh_report():
         short_sum = sum(short_values)
 
         way = long_sum - short_sum
-        way_word = '🔴 Рынок вверх' if way < 0 else '🟢 Рынок вниз'
+        way_word = '🟢 Рынок вверх' if way < 0 else '🔴 Рынок вниз'
         report_message = (
             f'Отчет BTC-содержащих ликвидаций за период\n'
             f'с  {start_period}\n'
-            f'по {str(datetime.datetime.now())[:-7]}\n\n'
+            f'по {str(datetime.datetime.utcnow())[:-7]}\n\n'
             f'Сумма Long: {long_sum:,.0f}\n'
             # f'{long_values}\n\n'
             f'Сумма Short: {short_sum:,.0f}\n\n'
@@ -91,3 +92,33 @@ async def lat_week_short_lonh_report():
             f'{way_word}\n{way:,.0f}'
         )
         return report_message
+
+
+async def get_last_volume(period, operation):
+    """
+    Раcчет объема последних операций за период в секундах.
+    :param int period: Время в секундах.
+    :param str operation: Поиск вхождения в text
+    :return: объем за период
+    :rtype: float
+    """
+    try:
+        logger.debug(f'get_last_volume Секнуд назад:{period} Операция: {operation}')
+        async_session = async_sessionmaker(engine)
+        async with async_session() as session:
+            result = await session.execute(select(Liquidation).filter(
+                Liquidation.volume.is_not(None),
+                Liquidation.text.icontains(operation),
+                Liquidation.addet_time > datetime.datetime.utcnow() - datetime.timedelta(seconds=period)
+                ).order_by(Liquidation.addet_time.desc()))
+            tweets = result.scalars().all()
+            volumes = []
+            for row in tweets:
+                volumes.append(row.volume)
+            logger.debug(f'Объем {operation} за последние {period} секунд: {volumes}. Итого: {sum(volumes)}')
+            await session.commit()
+            await engine.dispose()
+        logger.debug(f'Результат get_last_volume: {volumes}')
+        return sum(volumes)
+    except Exception:
+        logger.error(f'Ошибка в функции get_last_volume', exc_info=True)

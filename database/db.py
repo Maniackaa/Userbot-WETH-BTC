@@ -24,7 +24,7 @@ class Token(Base):
     id: Mapped[int] = mapped_column(primary_key=True,
                                     autoincrement=True,
                                     comment='Первичный ключ')
-    date: Mapped[str] = mapped_column(String(30), default=str(datetime.datetime.now()))
+    date: Mapped[str] = mapped_column(String(30), default=str(datetime.datetime.utcnow()))
     token: Mapped[str] = mapped_column(String(255))
     token_url: Mapped[str] = mapped_column(String(500))
     weth: Mapped[int] = mapped_column(String(255))
@@ -44,7 +44,7 @@ class Liquidation(Base):
     source: Mapped[str] = mapped_column(String(100))
     text: Mapped[str] = mapped_column(String(255))
     addet_time: Mapped[str] = mapped_column(DateTime(), default=str(
-        datetime.datetime.now()))
+        datetime.datetime.utcnow()))
     transaction: Mapped[str] = mapped_column(String(25), nullable=True)
     volume: Mapped[float] = mapped_column(Float(), nullable=True)
     price: Mapped[float] = mapped_column(Float(), nullable=True)

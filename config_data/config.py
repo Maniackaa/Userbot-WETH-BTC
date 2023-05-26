@@ -140,7 +140,8 @@ class Proxy:
 @dataclass
 class Logic:
     HONEYPOT_DELAY: int
-
+    LAST_TIME_SECONDS: int
+    VOLUME_LIMIT: int
 
 @dataclass
 class Config:
@@ -171,7 +172,10 @@ def load_config(path: str | None) -> Config:
                               password=env('PROXY_PASSWORD'),
                               port=env('PROXY_PORT'),
                               ),
-                  logic=Logic(HONEYPOT_DELAY=int(env('HONEYPOT_DELAY'))),
+                  logic=Logic(HONEYPOT_DELAY=int(env('HONEYPOT_DELAY')),
+                              LAST_TIME_SECONDS=int(env('LAST_TIME_SECONDS')),
+                              VOLUME_LIMIT=int(env('VOLUME_LIMIT')),
+                              ),
                   )
 
 

@@ -157,7 +157,7 @@ def send_message_tg(message: str, chat_id: str):
 
 def find_start_period(
         target_day: int,
-        current_day: datetime = datetime.datetime.now()) -> datetime:
+        current_day: datetime = datetime.datetime.utcnow()) -> datetime:
     """Возвращает datetime прошлонедельного заданного дня недели"""
     delta_to_day = target_day - current_day.weekday()
     if delta_to_day > 0:

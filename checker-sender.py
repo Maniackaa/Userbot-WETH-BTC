@@ -43,7 +43,7 @@ async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
         if token:
             logger.debug(f'Проверяем token {token}')
             token_data = datetime.datetime.fromisoformat(token.date)
-            now_time = datetime.datetime.now()
+            now_time = datetime.datetime.utcnow()
             now_time_timdelta = datetime.timedelta(hours=now_time.hour,
                                                    minutes=now_time.minute,
                                                    seconds=now_time.second)

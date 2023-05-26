@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 async def add_token_to_base(eth_token, eth_url, weth) -> None:
     new_token: Token = Token(
-        date=datetime.datetime.now(),
+        date=datetime.datetime.utcnow(),
         token=eth_token,
         token_url=eth_url,
         weth=weth,
