@@ -122,6 +122,7 @@ class DatabaseConfig:
 @dataclass
 class TgBot:
     token: str  # Токен для доступа к телеграм-боту
+    UNISWAP_TOKEN: str
     admin_ids: list[int]  # Список id администраторов бота
     base_dir = BASE_DIR
     API_HASH: str
@@ -154,6 +155,7 @@ def load_config(path: str | None) -> Config:
     env.read_env(path)
 
     return Config(tg_bot=TgBot(token=env('BOT_TOKEN'),
+                               UNISWAP_TOKEN=env('UNISWAP_TOKEN'),
                                API_HASH=env('API_HASH'),
                                API_ID=env('API_ID'),
                                admin_ids=list(map(int, env.list('ADMIN_IDS'))),

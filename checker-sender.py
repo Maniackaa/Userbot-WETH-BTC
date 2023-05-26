@@ -118,7 +118,7 @@ def read_group():
     with open(BASEDIR / 'myenv.env', 'r', encoding='UTF-8') as file:
         read_api_hash = config.tg_bot.API_HASH
         read_api_id = config.tg_bot.API_ID
-        read_bot_token = config.tg_bot.token
+        read_bot_token = config.tg_bot.UNISWAP_TOKEN
         read_send_id = config.tg_bot.admin_ids[0]
     return read_api_hash, read_api_id, read_bot_token, read_send_id
 
