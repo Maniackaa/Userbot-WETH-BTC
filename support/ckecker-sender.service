@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 EnvironmentFile=
-ExecStart=/bot/venv/bin/python checker-sender.py
-ExecReload=/bot/venv/bin/python checker-sender.py
+ExecStart=/home/Userbot-WETH-BTC/venv/bin/python checker-sender.py
+ExecReload=/home/Userbot-WETH-BTC/venv/bin/python checker-sender.py
 WorkingDirectory=/bot/
 KillMode=process
 Restart=always

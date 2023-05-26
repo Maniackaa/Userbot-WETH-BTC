@@ -1,12 +1,12 @@
 [Unit]
-Description=Uniswap Bot
+Description=userbot_monitoring
 After=network.target
 
 [Service]
 EnvironmentFile=
-ExecStart=/bot/venv/bin/python bot_monitoring_uniswapinstant.py
-ExecReload=/bot/venv/bin/python bot_monitoring_uniswapinstant.py
-WorkingDirectory=/bot/
+ExecStart=/home/Userbot-WETH-BTC/venv/bin/python userbot_monitoring.py
+ExecReload=/home/Userbot-WETH-BTC/venv/bin/python userbot_monitoring.py
+WorkingDirectory=/home/Userbot-WETH-BTC/
 KillMode=process
 Restart=always
 RestartSec=10
