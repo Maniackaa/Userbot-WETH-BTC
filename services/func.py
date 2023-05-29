@@ -47,7 +47,6 @@ def get_check(token):
             logger.debug('Не дождался')
             result_xpatch = '//div[contains(text(), "Unable to check")]'
             result = browser.find_element(By.XPATH, result_xpatch).text
-        print(result)
         return result
 
 
@@ -177,3 +176,7 @@ def format_last_report(liqidations: list[Liquidation]):
                  )
         text += '\n'
     return text
+
+
+x = find_start_period(0)
+print(x)

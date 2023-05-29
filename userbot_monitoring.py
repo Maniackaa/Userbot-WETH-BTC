@@ -50,14 +50,15 @@ print(f'Стартовые настройки:\n'
 
 def filter_to_channel(data):
     async def func(flt, client, message):
+        stop_list_username = ["BinanceFutures_Liquidations"]
         logger.debug(f'Фильтр на message:\n{message.text}')
         try:
             logger.debug(f'filter_to_channel. data: {data}')
             chat_title = message.chat.title
-            logger.debug(f'chat_title: {message.chat.title}')
-            logger.debug(f'chat_title in data: {chat_title in data}')
+            logger.debug(f'chat_title {message.chat.title}: {chat_title in data and message.chat.username not in stop_list_username}')
+            logger.debug(f'username: {message.chat.username}')
             print('chat_title:', chat_title)
-            return chat_title in data
+            return chat_title in data and message.chat.username not in stop_list_username
         except TypeError:
             err_log.warning(f'Ошибка в фильтре сообщения:{message}')
             return False
@@ -90,7 +91,8 @@ async def bitmex(client: Client, message: Message):
 @client.on_message(filters.text & filters.channel &
                    filter_to_channel(['Binance Futures Liquidations',
                                       'Bybit Liquidations 2.0 (Futures)',
-                                      'BinanceLiquidations']))
+                                      # 'BinanceLiquidations',
+                                      ]))
 async def binance_futures_liquidations(client: Client, message: Message):
     """
     Достает из сообщений групп
@@ -149,6 +151,7 @@ async def send_message(client: Client, message: Message):
 @client.on_message()
 async def last_filter(client: Client, message: Message):
     print('Мимо')
+    print(message)
 
 try:
     client.run()

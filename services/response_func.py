@@ -19,7 +19,6 @@ def convert_kilo_mega(value: str) -> int:
         for char in value:
             if char.upper() in short_nums:
                 digitals = value.split(char)[0]
-                print(digitals)
                 result = int(float(digitals) * short_nums[char.upper()])
         return result
     except Exception:
