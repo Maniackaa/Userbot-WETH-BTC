@@ -111,6 +111,7 @@ async def binance_futures_liquidations(client: Client, message: Message):
         logger.debug(f'Распознано из {text}:\n'
                      f'{(coin, transaction, volume, price)}')
         if 'BTC' in coin.upper():
+            logger.debug(f'BTC есть в названии')
             await add_liquidation(source,
                                   text, transaction, volume, price)
         else:

@@ -25,6 +25,7 @@ async def add_liquidation(source, text, transaction, volume, price) -> None:
     :return:
     """
     try:
+        logger.debug(f'ПРобуем добавить {source, text, transaction, volume, price}')
         new_liquidation: Liquidation = Liquidation(
             source=source,
             text=text,
@@ -33,6 +34,7 @@ async def add_liquidation(source, text, transaction, volume, price) -> None:
             volume=volume,
             price=price
             )
+        logger.debug(f'new_liquidation: {new_liquidation}')
         async_session: async_sessionmaker[AsyncSession] = async_sessionmaker(engine)
         async with async_session() as session:
             session.add(new_liquidation)
