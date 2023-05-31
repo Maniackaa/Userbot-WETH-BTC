@@ -10,8 +10,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from config_data.config import config, LOGGING_CONFIG
 from database.db import Token, engine
 from services.func import get_rug_check, get_honeypot_check, \
-    get_honeypot_check_contract
-
+    get_honeypot_check_contract, find_holders
 
 BASEDIR = Path(__file__).parent
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -35,6 +34,7 @@ async def check_empty_score(async_session: async_sessionmaker[AsyncSession]):
 async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
     """
     Достает первый пустой is_honeypot
+    Проверяет время и если время пришло заполняет is_honeypot и holders
     """
     async with async_session() as session:
         result = await session.execute(select(Token).filter(
@@ -58,21 +58,27 @@ async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
                          f'{delta / 60 > config.logic.HONEYPOT_DELAY}')
             if delta / 60 > config.logic.HONEYPOT_DELAY:
                 honey = get_honeypot_check(token.token)
-                logger.debug('honey: {honey}')
+                holders = await find_holders(token.token)
+                logger.debug(f'honey: {honey} holders: {holders}')
                 token.is_honeypot = honey
+                token.holders = holders
         await session.commit()
 
 
 def token_is_ok(token_to_check: Token):
     # Проверка условий отправки сообщения
-    if ('Nice' in token_to_check.score and
-            token_to_check.is_honeypot == '0' and
-            int(token_to_check.weth) >= 0 and
-            get_honeypot_check_contract(token_to_check.token) is True):
-        logger.info(f'nice {token_to_check}')
-        return 1
-    else:
-        logger.info(f'Не отправляем {token_to_check}')
+    logger.debug(f'Проверка на отправку сообщения')
+    logger.debug(f'Nice in token_to_check.score and token_to_check.is_honeypot == 0 and int(token_to_check.weth) >= 0: {"Nice" in token_to_check.score and token_to_check.is_honeypot == "0" and int(token_to_check.weth) >= 0}')
+    if 'Nice' in token_to_check.score and token_to_check.is_honeypot == '0' and int(token_to_check.weth) >= 0:
+        honeypot_check_contract = get_honeypot_check_contract(token_to_check.token)
+        logger.debug(f'honeypot_check_contract: {honeypot_check_contract} ({honeypot_check_contract is True})')
+        if honeypot_check_contract is True:
+            holders = token_to_check.holders
+            logger.debug(f'holders: {holders}. > {config.logic.HOLDERS_LIMIT}: {token_to_check.holders > config.logic.HOLDERS_LIMIT}')
+            if holders > config.logic.HOLDERS_LIMIT:
+                logger.info(f'nice {token_to_check}')
+                return 1
+    logger.debug(f'Не отправляем {token_to_check}:')
     return 0
 
 

@@ -3,7 +3,7 @@ import datetime
 import sys
 
 from sqlalchemy import create_engine, ForeignKey, Date, String, DateTime, \
-    Float, UniqueConstraint
+    Float, UniqueConstraint, Integer
 from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -30,6 +30,7 @@ class Token(Base):
     weth: Mapped[int] = mapped_column(String(255))
     score: Mapped[str] = mapped_column(String(500), nullable=True, default='')
     is_honeypot: Mapped[str] = mapped_column(String(255), nullable=True, default='')
+    holders: Mapped[int] = mapped_column(Integer(), nullable=True)
     message_sended: Mapped[str] = mapped_column(String(30), default='')
 
     def __repr__(self):
@@ -78,7 +79,7 @@ if __name__ == '__main__':
         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(init_models(engine))
+        loop.run_until_complete(init_models())
         loop.run_until_complete(asyncio.sleep(2.0))
     finally:
         loop.close()

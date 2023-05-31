@@ -142,6 +142,7 @@ class Logic:
     HONEYPOT_DELAY: int
     LAST_TIME_SECONDS: int
     VOLUME_LIMIT: int
+    HOLDERS_LIMIT: int
 
 @dataclass
 class Config:
@@ -175,6 +176,7 @@ def load_config(path: str | None) -> Config:
                   logic=Logic(HONEYPOT_DELAY=int(env('HONEYPOT_DELAY')),
                               LAST_TIME_SECONDS=int(env('LAST_TIME_SECONDS')),
                               VOLUME_LIMIT=int(env('VOLUME_LIMIT')),
+                              HOLDERS_LIMIT=int(env('HOLDERS_LIMIT')),
                               ),
                   )
 
