@@ -169,7 +169,8 @@ def find_start_period(
         res_delta_day = delta_to_day
     result_day = current_day + datetime.timedelta(days=res_delta_day)
     result_day = result_day.replace(hour=0, minute=0, second=0, microsecond=0)
-    return result_day
+    # return result_day
+    return current_day.date()
 
 
 def format_last_report(liqidations: list[Liquidation]):
@@ -216,3 +217,6 @@ async def find_holders(token_adress: str, delay: float = 0) -> int:
         return int(holders_text[0])
     except Exception as err:
         err_log.error(f'Ошибка распознавания holdera {token_adress}')
+
+x = find_start_period(0)
+print(x)
