@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from config_data.config import config, LOGGING_CONFIG
 from database.db import Token, engine
+from database.db_func import read_bot_settings
 from services.func import get_rug_check, get_honeypot_check, \
     get_honeypot_check_contract, find_holders
 
@@ -41,6 +42,8 @@ async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
             Token.is_honeypot == '').limit(1))
         token: Token = result.scalars().first()
         if token:
+            HONEYPOT_DELAY = await read_bot_settings('HONEYPOT_DELAY')
+            HONEYPOT_DELAY = int(HONEYPOT_DELAY)
             logger.debug(f'Проверяем token {token}')
             token_data = datetime.datetime.fromisoformat(token.date)
             logger.debug(f'token_data {token_data}')
@@ -48,9 +51,9 @@ async def check_empty_honey(async_session: async_sessionmaker[AsyncSession]):
             logger.debug(f'now_time {now_time}')
             delta = (now_time - token_data).total_seconds()
             logger.debug(f'Дельта в секундах {delta}')
-            logger.debug(f'{delta}/60 ({delta/60}) > {config.logic.HONEYPOT_DELAY}: '
-                         f'{delta / 60 > config.logic.HONEYPOT_DELAY}')
-            if delta / 60 > config.logic.HONEYPOT_DELAY:
+            logger.debug(f'{delta}/60 ({delta/60}) > {HONEYPOT_DELAY}: '
+                         f'{delta / 60 > HONEYPOT_DELAY}')
+            if delta / 60 > HONEYPOT_DELAY:
                 honey = get_honeypot_check(token.token)
                 holders = await find_holders(token.token)
                 logger.debug(f'honey: {honey} holders: {holders}')

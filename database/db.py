@@ -32,9 +32,10 @@ class Token(Base):
     is_honeypot: Mapped[str] = mapped_column(String(255), nullable=True, default='')
     holders: Mapped[int] = mapped_column(Integer(), nullable=True)
     message_sended: Mapped[str] = mapped_column(String(30), default='')
+    last_call: Mapped[str] = mapped_column(DateTime())
 
     def __repr__(self):
-        return f'{self.id}. {self.token} {self.score}'
+        return f'{self.id}. {self.token}'
 
 
 class Liquidation(Base):
